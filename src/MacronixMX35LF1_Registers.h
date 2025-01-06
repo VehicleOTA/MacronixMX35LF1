@@ -14,8 +14,8 @@
 #define CMD_PAGE_READ                  0x13  // Array read
 #define CMD_READ_FROM_CACHE            0x03  // Output cache data on MISO
 #define CMD_READ_RANDOM_DATA           0x0B  // Output cache data on MISO
-#define CMD_PROGRAM_LOAD_X4            0x3B  // Output cache data on MOSI and MISO 
-#define CMD_READ_FROM_CACHE_FAST_X4    0x6B  // Output cache data on MOSI, MISO, WP#, HOLD#
+#define CMD_READ_FROM_CACHE_X2         0x3B  // Output cache data on MOSI and MISO 
+#define CMD_READ_FROM_CACHE_X4         0x6B  // Output cache data on MOSI, MISO, WP#, HOLD#
 #define CMD_PAGE_READ_CACHE_SEQUENTIAL 0x31  // The next page data is transferred to buffer 
 #define CMD_PAGE_READ_CACHE_END        0x3F  // The last page data is transferred to buffer
 #define CMD_READ_MANUFACTURER_ID       0x9F  // Read device ID 
@@ -25,7 +25,7 @@
 #define CMD_PROGRAM_LOAD_RANDOM_DATA   0x84  // Load program data without cache reset
 #define CMD_WRITE_ENABLE               0x06  // Setting Write Enable Latch (WEL) bit
 #define CMD_WRITE_DISABLE              0x04  // Reset Write Enable Latch (WEL) bit 
-#define CMD_ PROGRAM_LOAD_X4           0x32  // Program Load operation with X4 data input
+#define CMD_PROGRAM_LOAD_X4            0x32  // Program Load operation with X4 data input
 #define CMD_QUAD_IO_PROGRAM_INPUT      0X34  // Program Load random data operation with X4 data input
 #define CMD_RESET                      0xFF  // Reset the device 
 
