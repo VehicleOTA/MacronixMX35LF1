@@ -70,6 +70,10 @@
 #define SECURE_OTP_PROTECT             (1 << 7)
 
 // Block Protection values
+/* check the datasheet to see all options (page 36) */
+#define ALL_UNLOCKED                   0b00000000
+#define ALL_LOCKED                     0b00011100
+#define ALL_LOCKED_MAX_BIT             0b00011111
 #define SP_BIT                         (1 << 0)
 #define COMPLEMENTARY_BIT              (1 << 1)
 #define INVERT_BIT                     (1 << 2)

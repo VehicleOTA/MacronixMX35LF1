@@ -88,9 +88,11 @@ class MX35LF
 
     uint8_t WaitOperationDone(void);
 
-    uint8_t Unlocked_BlockProtection(void);
+    /* 5 bits to be considered */
     uint8_t Locked_BlockProtection(uint8_t BP);
+    uint8_t Unlocked_BlockProtection(void);
     void Enable_Solid_Protection(void);
+    void Disable_Solid_Protection(void);
 
     void Test_GET_Registers_BlockProtection(void);
     void Test_GET_Registers_SecureOTP(void);

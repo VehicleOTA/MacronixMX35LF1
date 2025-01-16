@@ -440,40 +440,42 @@ uint8_t MX35LF::WaitOperationDone()
 
 
 
+uint8_t MX35LF::Locked_BlockProtection(uint8_t BP)
+{
+    if (BP > ALL_LOCKED_MAX_BIT || BP <= ALL_UNLOCKED)
+        return MX35_FAIL;
+
+    uint8_t re = (BP << 1) | mx35lf_GET_Features(REG_BLOCK_PROTECTION);
+
+    Enable_WP_pin();
+    mx35lf_SET_features(REG_BLOCK_PROTECTION, re);
+    mx35lf_SET_features(REG_BLOCK_PROTECTION, re | BPRWD_BIT);
+    Disable_WP_pin();
+
+    return MX35_OK;
+}
+
 uint8_t MX35LF::Unlocked_BlockProtection()
 {
     uint8_t b_prot = mx35lf_GET_Features(REG_BLOCK_PROTECTION);
 
     if (b_prot & 0x01)
     {
-        b_prot &= 0xFE;
+        b_prot &= ~SP_BIT;
         mx35lf_SET_features(REG_BLOCK_PROTECTION, b_prot);
     }
 
     if (b_prot & 0x80)
     {
-        b_prot &= 0x7E;
+        Enable_WP_pin();
+        b_prot &= ~BPRWD_BIT;
         mx35lf_SET_features(REG_BLOCK_PROTECTION, b_prot);
     }
 
     Enable_WP_pin();
     mx35lf_SET_features(REG_BLOCK_PROTECTION, b_prot & 0x40);
     Disable_WP_pin();
-    return MX35_OK;
-}
-
-uint8_t MX35LF::Locked_BlockProtection(uint8_t BP)
-{
-    if (BP > 0x1F || BP <= 0x00)
-        return MX35_FAIL;
-
-    uint8_t re = (BP << 1) | mx35lf_GET_Features(REG_BLOCK_PROTECTION);
-
-    Enable_WP_pin();
-    mx35lf_SET_features(REG_BLOCK_PROTECTION, BP);
-    mx35lf_SET_features(REG_BLOCK_PROTECTION, BP | BPRWD_BIT);
-    Disable_WP_pin();
-
+    
     return MX35_OK;
 }
 
@@ -482,6 +484,13 @@ void MX35LF::Enable_Solid_Protection()
     uint8_t b_prot = mx35lf_GET_Features(REG_BLOCK_PROTECTION);
 
     mx35lf_SET_features(REG_BLOCK_PROTECTION, b_prot | SP_BIT);
+}
+
+void MX35LF::Disable_Solid_Protection()
+{
+    uint8_t b_prot = mx35lf_GET_Features(REG_BLOCK_PROTECTION);
+
+    mx35lf_SET_features(REG_BLOCK_PROTECTION, b_prot & ~SP_BIT);
 }
 
 
