@@ -303,7 +303,9 @@ void MX35LF::Verify_Bad_Blocks(uint8_t *buffer, uint32_t buffer_size)
 uint8_t MX35LF::mx35lf_GET_Features(uint8_t address)
 {
     Serial.printf("[%ld] - uint8_t mx35lf_GET_Features()\r\n", millis());
+    
     uint8_t ret;
+    unsigned long start_time = millis();
 
     _spi->beginTransaction(SPISettings(CLOCK_FREQUENCY, MSBFIRST, SPI_MODE0));
     MX35_SELECT();
@@ -313,19 +315,33 @@ uint8_t MX35LF::mx35lf_GET_Features(uint8_t address)
     MX35_UNSELECT();
     _spi->endTransaction();
 
+    unsigned long elapsed_time = millis() - start_time; 
+
+    Serial.printf("Tempo para enviar o comando GET FEATURES e receber a resposta: %lums\r\n", elapsed_time);
+    Serial.printf("Valor lido do registro (0x%02X): 0x%02X\r\n", address, ret);
+
     return ret;
 }
 
 void MX35LF::mx35lf_SET_features(uint8_t address, uint8_t value)
 {
     Serial.printf("[%ld] - void mx35lf_SET_features()\r\n", millis());
+
+    unsigned long start_time = millis();
+    
     _spi->beginTransaction(SPISettings(CLOCK_FREQUENCY, MSBFIRST, SPI_MODE0));
     MX35_SELECT();
     spi_readwrite(CMD_SET_FEATURES);
     spi_readwrite(address);
     spi_readwrite(value);    
     MX35_UNSELECT();
-    _spi->endTransaction();   
+    _spi->endTransaction(); 
+    
+    unsigned long elapsed_time = millis() - start_time; 
+    Serial.printf("Tempo para enviar o comando GET FEATURES e receber a resposta: %lums\r\n", elapsed_time);
+    Serial.printf("Valor lido do registro (0x%02X): 0x%02X\r\n", address, value);
+    
+    return;
 }
 
 
@@ -420,6 +436,52 @@ uint8_t MX35LF::WaitOperationDone()
         if ((mx35lf_GET_Features(REG_STATUS) & 0x01) == STATUS_READY)
             return MX35_OK;
     return MX35_FAIL;   
+}
+
+
+
+uint8_t MX35LF::Unlocked_BlockProtection()
+{
+    uint8_t b_prot = mx35lf_GET_Features(REG_BLOCK_PROTECTION);
+
+    if (b_prot & 0x01)
+    {
+        b_prot &= 0xFE;
+        mx35lf_SET_features(REG_BLOCK_PROTECTION, b_prot);
+    }
+
+    if (b_prot & 0x80)
+    {
+        b_prot &= 0x7E;
+        mx35lf_SET_features(REG_BLOCK_PROTECTION, b_prot);
+    }
+
+    Enable_WP_pin();
+    mx35lf_SET_features(REG_BLOCK_PROTECTION, b_prot & 0x40);
+    Disable_WP_pin();
+    return MX35_OK;
+}
+
+uint8_t MX35LF::Locked_BlockProtection(uint8_t BP)
+{
+    if (BP > 0x1F || BP <= 0x00)
+        return MX35_FAIL;
+
+    uint8_t re = (BP << 1) | mx35lf_GET_Features(REG_BLOCK_PROTECTION);
+
+    Enable_WP_pin();
+    mx35lf_SET_features(REG_BLOCK_PROTECTION, BP);
+    mx35lf_SET_features(REG_BLOCK_PROTECTION, BP | BPRWD_BIT);
+    Disable_WP_pin();
+
+    return MX35_OK;
+}
+
+void MX35LF::Enable_Solid_Protection()
+{
+    uint8_t b_prot = mx35lf_GET_Features(REG_BLOCK_PROTECTION);
+
+    mx35lf_SET_features(REG_BLOCK_PROTECTION, b_prot | SP_BIT);
 }
 
 

@@ -6,10 +6,8 @@
 */
 
 /* TODO:
- * Block Protection Feature
  * Secure OTP (One-Time-Programmable) Feature
  * Internal ECC Enabled/Disabled Feature
- * Hold Pin
  * Ignore Invalid Blocks
  * Check inappropriate inputs in functions
 */
@@ -34,7 +32,6 @@ class MX35LF
   private:
     uint8_t mx35CS;                    // Chip Select pin number
     int8_t _WPpin = -1;                // Pin to control the Write Protection (#WP)
-    int8_t _Holdpin = -1;              // Pin to control the #HOLD 
     SPIClass *_spi;                    // The SPI-Device used
     bool debug_mode = false;           // Variable to enable the Debug in Serial Monitor
     uint8_t WP_status = LOW;           // Variable to storage the lastest value of WP status
@@ -90,6 +87,10 @@ class MX35LF
     void Set_Debug_Mode(bool _debug);
 
     uint8_t WaitOperationDone(void);
+
+    uint8_t Unlocked_BlockProtection(void);
+    uint8_t Locked_BlockProtection(uint8_t BP);
+    void Enable_Solid_Protection(void);
 
     void Test_GET_Registers_BlockProtection(void);
     void Test_GET_Registers_SecureOTP(void);
