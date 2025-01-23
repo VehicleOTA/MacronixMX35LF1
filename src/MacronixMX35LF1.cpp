@@ -459,13 +459,13 @@ uint8_t MX35LF::Unlocked_BlockProtection()
 {
     uint8_t b_prot = mx35lf_GET_Features(REG_BLOCK_PROTECTION);
 
-    if (b_prot & 0x01)
+    if (b_prot & SP_BIT)
     {
         b_prot &= ~SP_BIT;
         mx35lf_SET_features(REG_BLOCK_PROTECTION, b_prot);
     }
 
-    if (b_prot & 0x80)
+    if (b_prot & BPRWD_BIT)
     {
         Enable_WP_pin();
         b_prot &= ~BPRWD_BIT;
@@ -491,6 +491,29 @@ void MX35LF::Disable_Solid_Protection()
     uint8_t b_prot = mx35lf_GET_Features(REG_BLOCK_PROTECTION);
 
     mx35lf_SET_features(REG_BLOCK_PROTECTION, b_prot & ~SP_BIT);
+}
+
+
+
+uint8_t MX35LF::SecureOTP_NormalOperation() 
+{
+    uint8_t ret = mx35lf_GET_Features(REG_SECURE_OTP);
+    ret &= ~SECURE_OTP_ENABLE;
+    ret &= ~SECURE_OTP_PROTECT;
+    mx35lf_SET_features(REG_SECURE_OTP, ret);
+    return MX35_OK;
+}
+
+void MX35LF::SecureOTP_Enable()
+{
+    uint8_t ret = mx35lf_GET_Features(REG_SECURE_OTP);
+    mx35lf_SET_features(REG_SECURE_OTP, ret | SECURE_OTP_ENABLE);
+}
+
+void MX35LF::SecureOTP_ProtectionBit()
+{
+    uint8_t ret = mx35lf_GET_Features(REG_SECURE_OTP);
+    mx35lf_SET_features(REG_SECURE_OTP, ret | SECURE_OTP_PROTECT | SECURE_OTP_ENABLE);
 }
 
 

@@ -94,6 +94,10 @@ class MX35LF
     void Enable_Solid_Protection(void);
     void Disable_Solid_Protection(void);
 
+    uint8_t SecureOTP_NormalOperation(void);
+    void SecureOTP_Enable(void);
+    void SecureOTP_ProtectionBit(void);
+
     void Test_GET_Registers_BlockProtection(void);
     void Test_GET_Registers_SecureOTP(void);
     void Test_GET_Registers_Status(void);    
