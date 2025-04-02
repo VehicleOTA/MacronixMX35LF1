@@ -1,0 +1,8 @@
+{
+    "name": "MacronixMX35LF1",
+    "version": "1.0",
+    "build": {
+      "srcFilter": "+<src/>"
+    }
+  }
+  
