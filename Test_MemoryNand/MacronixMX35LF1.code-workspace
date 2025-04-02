@@ -1,0 +1,12 @@
+{
+	"folders": [
+		{
+			"path": "../../../../../../../Unb/VEHICLE_OTA/MacronixMX35LF1"
+		},
+		{
+			"name": "Test_MemoryNand",
+			"path": "."
+		}
+	],
+	"settings": {}
+}
