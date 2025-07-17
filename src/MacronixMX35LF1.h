@@ -45,11 +45,12 @@ class MX35LF
     ~MX35LF() {};
 
     uint8_t begin(void);
-    uint8_t begin(uint8_t _wp_pin);
+    uint8_t begin_WP(uint8_t _wp_pin);
 
     uint8_t mx35lf_init_check(void);
     void mx35lf_reset(void);
-
+    bool load_page_to_cache(uint16_t page_address);
+    
     uint8_t mx35lf_start_read_page(uint16_t page_address);
     uint8_t read_one_page_from_block(uint16_t page_address, uint8_t *buffer, uint32_t len,  \
                                      uint8_t wrap = FINAL_PAGE_ADDRESS_2048);
@@ -102,7 +103,13 @@ class MX35LF
     void Test_GET_Registers_SecureOTP(void);
     void Test_GET_Registers_Status(void);    
     void Test_GET_Registers_InternalECC(void);
-
+    uint8_t update_page_compare_write(uint16_t page_address, const uint8_t* new_data, uint32_t length);
+    uint8_t add_file_to_index(const char* filename, uint16_t start_page, uint16_t num_pages, uint32_t len);
+    uint8_t write_file(const char* filename, const uint8_t* data, size_t len);
+    uint8_t read_file(const char* filename, uint8_t* out_buffer, size_t* out_len);
+    bool is_block_bad(uint16_t block_num);
+    uint8_t write_raw_file(uint16_t start_page, const uint8_t* data, size_t len);
+    uint8_t read_raw_file(uint16_t start_page, uint8_t* out_buffer, size_t len);
   private:
 };
 

@@ -2,7 +2,7 @@
 #define MacronixMX35LF1_Registers_H
 
 #include "Arduino.h"
-#include <SPI.h>
+#include "SPI.h"
 
 // Enables and disables CS pin
 #define MX35_SELECT()   digitalWrite(mx35CS, LOW)  // Enable CS Pin 
